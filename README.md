@@ -2,7 +2,6 @@
   <img src="https://github.com/jegly/jegly/blob/main/jes.gif" alt="Chaotic Cubes" width="250">
 </p>
 
-
 # Google assigned 30+ of my zero-click Android bugs, had me sign a CLA, then closed them "duplicate" or "not a vulnerability" and shipped the fixes. Eight months on, a bounty they confirmed in writing is still half unpaid.
 
 This repository is the evidence archive for a pattern I have documented across my own Android VRP reports to Google. It contains the methodology, the ticket-by-ticket case index, and the before/after code for every claim made here. Everything below is sourced from Buganizer ticket text I have access to and from binary/bytecode comparisons I ran myself against Google's own shipped factory images. Where I quote Google, the quote is verbatim from the ticket.
@@ -13,7 +12,7 @@ I have spent most of the last four months doing security research on a current P
 
 Here is what I have to show for it. One bounty, for two older bugs, that Google confirmed in writing at five hundred dollars total. Half of it, two hundred fifty dollars, has been paid. The other half has been "processing" since January 2026. That is over eight months of "manual exception workflow" and "we cannot give you an exact date." Every one of the thirty-plus newer findings has been closed for nothing, while the fixes get logged to ship anyway.
 
-This is not one unlucky ticket. It is a pattern across dozens of tickets, and I pulled Google's own current factory images apart to check it myself rather than take their closure labels at face value.
+This is not one unlucky ticket. Going through Google's own current factory images function by function, I can confirm **9 of my findings were fixed in the shipped code with no reward or credit**, and a further **14 were closed as duplicate, infeasible, or can't-repro while the exact defect I reported is still unchanged in the current build**. Both tables below list these by ticket number.
 
 ## Methodology
 
@@ -67,8 +66,9 @@ Every row below was checked directly against the current September 2026 factory 
 | 545948346 | libpixelimsmedia.so `RtpSession::numberOfReportBlocks` | Duplicate, "previously reported by an internal Google engineer" | Fixed. An underflow check was added before the division that used to produce garbage. |
 | 540755547 | libpixelimsmedia.so `RtcpChunk::decodeRtcpChunk` | Duplicate | Fixed. A bound check on the SDES item length was added before the allocation and copy. |
 | 541096815 | libpixelimsmedia.so `RtpDecoderNode::DecodeRtpHeaderExtension` | Infeasible, "not a security vulnerability" | Fixed. The length byte is now read unsigned instead of signed, with a new bound check added after it. |
+| (no ticket ID yet) | ShannonRcs.apk `DeviceProvisioningService` (Samsung-side submission, same program) | - | Fixed. The service now requires a signature\|privileged permission where none existed before. |
 
-Two more native ImsMedia fixes in the same family were confirmed during this audit but do not yet have a Buganizer ticket ID attached: a bound check added to `RtcpFbPacket::decodeRtcpFbPacket`, and a new permission check added to IntentResolver's `PayloadToggleCursorResolver` (a different cross-profile leak in the same app as 538314136 below, fixed, while the one I reported in that same ticket was not).
+Three more confirmed fixes do not yet have a Buganizer ticket ID attached and are not in the table above: a bound check added to `RtcpFbPacket::decodeRtcpFbPacket`, a new permission check added to IntentResolver's `PayloadToggleCursorResolver` (a different cross-profile leak in the same app as 538314136 below, fixed, while the one I reported in that ticket was not), and the ShannonRcs fix in the table row directly above. That brings the confirmed-fixed total to 9.
 
 ## Case index: confirmed still present, closed with no reward
 
@@ -97,9 +97,12 @@ A further set of findings submitted to Samsung and MediaTek through the same pro
 
 In June 2026, The Register ran "Google told researcher 'Nice catch!' Then denied bug bounty for flaw it still hasn't fixed." Praise, then denial, then an unfixed bug. A separate researcher documented their own Google VRP case moving from "not a bug" to "not a vulnerability" to, finally, duplicate, meaning Google knew the whole time it was real. CSO Online has reported that legal experts believe these programs may raise labor-law questions, treating people who do the work of employees as disposable contractors whose finished work can be rejected with no explanation and no recourse.
 
-I am not against Google generally. I fork and contribute to their open source projects, Google has also added features from my projects into theirs. This is specifically about what happened when I reported real, working security findings through their own stated process.
+I am not against Google generally. I fork and contribute to their open source projects. This is specifically about what happened when I reported real, working security findings through their own stated process.
 
 ## What I am asking
 
 If you have run findings through the Android VRP, or any large vendor's bug bounty program, and watched a report get assigned, then closed as duplicate or infeasible while the fix shipped anyway, I would like to know if your experience matches this one. I am happy to answer technical questions on any specific finding in this repository.
 
+---
+
+*Methodology notes, full audit table, and raw ticket references are maintained in this repository alongside this README.*
