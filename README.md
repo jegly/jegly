@@ -4,8 +4,6 @@
 
 
 
-# My experiance with VRP, Google assigned 30+ of my zero-click Android bugs, had me sign a CLA, then closed them "duplicate" or "not a vulnerability" and shipped the fixes. Eight months on, a bounty they confirmed in writing is still half unpaid. 85+ Total bugs submitted over 8 months of everyday work.
-
 This repository documents a pattern across my own Android VRP reports to Google. Everything below concerns reports Google has already **closed** (as duplicate, infeasible, can't-repro, or working-as-intended). Nothing here concerns a report that is still open or under active coordinated disclosure. Where I quote Google, the quote is verbatim from the ticket.
 
 ## Summary
