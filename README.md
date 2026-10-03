@@ -2,6 +2,8 @@
   <img src="https://github.com/jegly/jegly/blob/main/jes.gif" alt="Chaotic Cubes" width="250">
 </p>
 
+
+
 # Google assigned 30+ of my zero-click Android bugs, had me sign a CLA, then closed them "duplicate" or "not a vulnerability" and shipped the fixes. Eight months on, a bounty they confirmed in writing is still half unpaid.
 
 This repository is the evidence archive for a pattern I have documented across my own Android VRP reports to Google. It contains the methodology, the ticket-by-ticket case index, and the before/after code for every claim made here. Everything below is sourced from Buganizer ticket text I have access to and from binary/bytecode comparisons I ran myself against Google's own shipped factory images. Where I quote Google, the quote is verbatim from the ticket.
@@ -12,7 +14,7 @@ I have spent most of the last four months doing security research on a current P
 
 Here is what I have to show for it. One bounty, for two older bugs, that Google confirmed in writing at five hundred dollars total. Half of it, two hundred fifty dollars, has been paid. The other half has been "processing" since January 2026. That is over eight months of "manual exception workflow" and "we cannot give you an exact date." Every one of the thirty-plus newer findings has been closed for nothing, while the fixes get logged to ship anyway.
 
-This is not one unlucky ticket. Going through Google's own current factory images function by function, I can confirm **9 of my findings were fixed in the shipped code with no reward or credit**, and a further **14 were closed as duplicate, infeasible, or can't-repro while the exact defect I reported is still unchanged in the current build**. Both tables below list these by ticket number.
+This is not one unlucky ticket, and it is two separate problems, not one. Going through Google's own current factory images function by function, I can confirm **9 of my findings were fixed in the shipped code with no reward or credit at all**. That is the money and credit problem. Separately, **14 more were closed as duplicate, infeasible, or can't-repro, and the exact defect I reported is still unchanged, still shipping, in the current build today**. Nobody owes a reward for an unfixed bug. What that second group proves is different: that the stated reason for closing them does not hold up against the actual code. Both tables below list these by ticket number, kept apart on purpose.
 
 ## Methodology
 
@@ -70,9 +72,9 @@ Every row below was checked directly against the current September 2026 factory 
 
 Three more confirmed fixes do not yet have a Buganizer ticket ID attached and are not in the table above: a bound check added to `RtcpFbPacket::decodeRtcpFbPacket`, a new permission check added to IntentResolver's `PayloadToggleCursorResolver` (a different cross-profile leak in the same app as 538314136 below, fixed, while the one I reported in that ticket was not), and the ShannonRcs fix in the table row directly above. That brings the confirmed-fixed total to 9.
 
-## Case index: confirmed still present, closed with no reward
+## Case index: still unpatched, closed with reasoning that does not hold up
 
-These were closed as duplicate, infeasible, or can't-repro, and the exact code the report described is unchanged in the current factory image.
+This table is not a payment claim. None of these bugs were fixed, so no reward is owed for them under any normal program rule. What this table shows is that the stated reason for closing each one, duplicate, infeasible, or can't-repro, does not match the actual code. The defect described in the original report is still there, unchanged, in the current factory image.
 
 | Ticket | Component / function | Closure reason | Verdict |
 |---|---|---|---|
@@ -99,3 +101,10 @@ In June 2026, The Register ran "Google told researcher 'Nice catch!' Then denied
 
 I am not against Google generally. I fork and contribute to their open source projects. This is specifically about what happened when I reported real, working security findings through their own stated process.
 
+## What I am asking
+
+If you have run findings through the Android VRP, or any large vendor's bug bounty program, and watched a report get assigned, then closed as duplicate or infeasible while the fix shipped anyway, I would like to know if your experience matches this one. I am happy to answer technical questions on any specific finding in this repository.
+
+---
+
+*Methodology notes, full audit table, and raw ticket references are maintained in this repository alongside this README.*
