@@ -96,6 +96,97 @@ This table is not a payment claim. None of these bugs were fixed, so no reward i
 
 A further set of findings submitted to Samsung and MediaTek through the same program follows the identical pattern: closed duplicate, infeasible, or "below bar," with the reported code confirmed unchanged in the current image. The full line-by-line audit, covering over seventy individual findings with their exact evidence and verdicts, is in `PATCH_AUDIT_PUBLIC.md` in this repository.
 
+# Full audit: factory-image verification of reported findings
+
+Baseline images: rango (Pixel 10 Pro Fold, build CP3A.260905.009) and yogi (Pixel 11 Pro Fold, build CD1A.260905.001.B1), both dated September 2026.
+
+Method: for each finding below, the exact binary, library, or jar named in the original report was pulled from the current factory image and the cited function was located and compared against the report's description. See the README for the full methodology and the four verdict categories (PATCHED, STILL PRESENT, N/A, CANT-DETERMINE).
+
+| Ticket | Component / function | Device | Verdict | Evidence |
+|---|---|---|---|---|
+| - | sit.stream.so `DecodingBarringInfos` | blazer/rango (Tensor) | STILL PRESENT | Byte-identical check-after-copy sequence at the reported offset. |
+| - | sit.stream.so `FillCellInfo` | rango | STILL PRESENT | Byte-identical; unconditional 2-byte read still precedes the length-validation call. |
+| - | libsitril.so `OnReadPbEntryDone` | blazer | CANT-DETERMINE | Binary differs between blazer and rango; needs a blazer image. |
+| - | vendor.radio.base.so `DecodingNetworkNameFromSIM` | blazer | CANT-DETERMINE | Different binary/device; needs a blazer image. |
+| - | libsitril.so `BuildSimAuthenticate` | blazer | CANT-DETERMINE | Same cross-device issue as above. |
+| MSV-11982 | libmipc.so `mipc_msg_deserialize` | yogi | STILL PRESENT | Byte-identical at every cited address. |
+| 550215386 | libmtkmipc-ril.so `handleSecurityAlgorithmsUpdated` | yogi | STILL PRESENT | Function moved in the binary; the vulnerable fail-open defaults are unchanged at the new address. Still Assigned. |
+| MSV-12075 | libmtkmipc-ril.so `handleUssdInd` | yogi | STILL PRESENT | Byte-identical; incorrect TLV length field still used for the copy length. |
+| - | libimsmediahalproxy_mtk.so `processRtpSessionReceivedDtmfInd` | yogi | STILL PRESENT | Byte-identical VLA-size mask, no upper-bound check added. |
+| MSV-11979 | libmtkmipc-ril.so `BearerData::specialProcessForCtWapPush` | yogi | STILL PRESENT | Byte-identical dest-offset mask at the function's new address after a build-layout shift. |
+| - | libmtkmipc-ril.so `onPcoInfoNotify` | yogi | STILL PRESENT | Byte-identical NULL length argument, unchanged. |
+| - | sit.stream.so `processSlicingConfig` | blazer | CANT-DETERMINE | Address exceeds this image's binary size; needs a blazer image. |
+| - | android.hardware.samsung.uwb-service `CalDataReadCmd::handleRspData` | blazer | CANT-DETERMINE | Build/layout differs from this image; needs a blazer image. |
+| - | cpif.ko `pktproc_get_pkt_from_sktbuf_mode` | blazer | STILL PRESENT (high confidence) | Same twin bound-check pattern (inclusive upper bound) found at the resolved symbol offset. |
+| 537918512 | libframesequence.so (WebP compositor) | rango/yogi | CANT-DETERMINE | Library rebuilt with a newer toolchain since the report; the specific function could not be relocated in the time available. |
+| 549660955 | PixelModemService.apk `FeatureMetricsAlarmReceiver` | yogi | STILL PRESENT | Exported, no permission, unchanged. Still Assigned. |
+| 549662989 | PixelModemService.apk `MintReceiver` + guard permission | yogi | PATCHED | The guard permission `MINT_CONFIGURATION_UPDATE_BROADCAST` is now defined, signature\|privileged. |
+| 560448300 | com.android.omadm.service `DMService.TelephonyBroadcastReceiver` | yogi | STILL PRESENT | Exported, no permission, unchanged. |
+| 560448300 | com.google.android.configupdater (8 receivers) | yogi | STILL PRESENT | All 8 receivers still exported, no permission. |
+| 560448300 | com.android.ons `ONSProfileResultReceiver` | yogi | STILL PRESENT | Exported, no permission, unchanged. |
+| 561846309 | ConfigUpdater.apk `PhenotypeHelper.getCertificate()` | yogi | STILL PRESENT | Byte-for-byte identical; no switch on config type, unlike its sibling methods. |
+| 563967518 / 558468271 | MyVerizonServices.apk `COMPONENT_STATUS` + providers | yogi | STILL PRESENT | Guard permission still not declared anywhere in the APK. Still Assigned. |
+| 561838690 | com.google.android.as `MusicRelayService` | yogi | STILL PRESENT (manifest level) | Exported, no permission, unchanged. |
+| 562215877 | com.google.android.as.oss `NowPlayingRelayService` | yogi | STILL PRESENT (manifest level) | Exported, no permission, unchanged. |
+| 552305734 | CrossDeviceAccessServicePrimary.apk `PermissionBroadcastReceiver` | yogi | STILL PRESENT | Exported, no permission, unchanged. |
+| 558478942 | DCMO.apk `DcmoReceiver` | yogi | STILL PRESENT | Exported, no permission, unchanged. |
+| 559524832 | services.jar `AccountManagerService.isSystemUid` | yogi | STILL PRESENT | Same flag-based check, no real UID/signature check. Still Assigned. |
+| 555981160 | telephony-common.jar `ValueParser.retrieveItemsIconId` | yogi | STILL PRESENT | Byte-exact; no lower-bound check before array allocation. |
+| 538367541 / 543174762 | telephony-common.jar `WapPushOverSms.decodeWapPdu` | yogi | STILL PRESENT | Unchecked decoded value used directly as an allocation size. |
+| 538369053 | framework.jar `PduParser.parseParts` | yogi | PATCHED | Bound check added against available stream bytes before the allocation. |
+| 560866996 | framework.jar `PduParser` (same defect) | yogi | PATCHED | Same fix as above. |
+| 557568085 | TelephonyProvider.apk `updateSynchronized()` | yogi | STILL PRESENT | Selection string still concatenated with no parentheses around the caller-supplied fragment. |
+| 563677600 | WebAppServiceGoogle.apk | yogi | STILL PRESENT | Exported, no permission, unchanged at the manifest level. |
+| - | AppDirectedSMSService.apk (Verizon) | rango | POSSIBLY PATCHED, unconfirmed | The receiver block does not appear in this image; needs direct re-diff before being called a confirmed fix. |
+| 565498857 | framework-res.apk `EXECUTE_APP_FUNCTIONS` | yogi | N/A | This image's protection level matches the report's own description of the safe baseline. |
+| 560453159 | service-ranging.jar `RangingServiceImpl` (UWB) | yogi | STILL PRESENT on stable | No permission check on either affected method. The same fix exists on the Android 17 QPR2 beta track. |
+| 560453159 | CccDkTimeSyncService.apk | yogi | STILL PRESENT | Exported, no permission, unchanged. |
+| 560456349 | TeleService.apk `SatelliteAccessController.isMockModemAllowed()` | yogi | STILL PRESENT | Default-true value unchanged. Still Assigned. |
+| 555984702 | grilservice.apk `RadioConfig.readFromParcel` | yogi | STILL PRESENT | Raw size field used directly as an allocation size, no upper bound. |
+| 552188030 | services.jar `Vpn.setVpnForcedLocked()` | yogi | STILL PRESENT | UID 0 still excluded from the VPN lockdown range. |
+| 552196751 | framework.jar `NetworkCapabilities` (architectural) | rango | N/A | Google has acknowledged this is an intentional design choice, not a defect. |
+| 558472707 | service-npumanager.jar `NpuManagerServiceImpl.cancelModelLoad` | yogi | STILL PRESENT | No caller-identity check, unlike sibling methods on the same class. |
+| 540753210 | libpixelimsmedia.so `RtcpFbPacket::decodeRtcpFbPacket` | yogi | PATCHED | Length check added before the operation that previously underflowed unconditionally. |
+| 540755547 | libpixelimsmedia.so `RtcpChunk::decodeRtcpChunk` | yogi | PATCHED | Bound check added on the SDES item length before the allocation and copy. |
+| 541096815 | libpixelimsmedia.so `RtpDecoderNode::DecodeRtpHeaderExtension` | yogi | PATCHED | Length byte now read unsigned; new bound check added. |
+| 545948346 | libpixelimsmedia.so `RtpSession::numberOfReportBlocks` | yogi | PATCHED | Underflow check added before the division that previously produced garbage. |
+| - | libimsstack.so `SipMsgBody::EncodeSingleMsgBody` / `SetMsgBuffer` | yogi | STILL PRESENT | No cap against the maximum message size anywhere in the call path. |
+| 560878423 | libimsstack.so `SipMessageFraming::ParseMessageBody` | yogi | STILL PRESENT | Same signed-comparison logic at the function's new address; a negative content length is still accepted. |
+| 538314136 | IntentResolver.apk `UriMetadataReaderImpl.getMetadata` (DISPLAY_ICON_URI) | yogi | STILL PRESENT | No ownership check on the cross-profile URI read; logic unchanged despite a refactor. |
+| - | rkpdapp.google.apk `X509Utils.verifyCertChain` | yogi | STILL PRESENT | Caller-supplied root used as the sole trust anchor, no hardcoded pin. |
+| 559533853 | pmgd (native Rust binary) | yogi | CANT-DETERMINE | Aggressive symbol stripping; the relevant function could not be identified. |
+| 537920968 | nfc_nci.st21nfc.default.so `handlePollingLoopData` | rango | STILL PRESENT | Same undersized length-check logic confirmed at the function's new address. |
+| - | nfc_nci.st21nfc.default.so `FwUpdateHandler` | rango | not rigorously checked | Function located but no precise comparison pattern available. |
+| 538311587 | android.hardware.secure_element-service.uicc | rango | STILL PRESENT | Same mutex/slot/type offsets, no per-call correlation token. |
+| 563958561 | framework-res.apk protected-broadcast list + SettingsGoogle.apk receivers | yogi | STILL PRESENT | Broadcast still unprotected; checked receivers still exported, no permission. Still Assigned. |
+| - | PrebuiltBugle.apk `ConversationSuggestionDeserializer` / `LighterWebView` | yogi | STILL PRESENT | Scheme blocklist and allowlist logic unchanged. |
+| - | PrebuiltBugle.apk `LighterWebView` (related finding) | yogi | STILL PRESENT | Same root cause as above. |
+| - | PrebuiltBugle.apk MMS PDU decoder | rango | STILL PRESENT | Allocation site still has no upper-bound check. |
+| - | android.hardware.samsung.uwb-service `match_dev_ctrl_cmd` | rango | CANT-DETERMINE | Build differs from the reported device; needs the matching image. |
+| ShannonRcs.apk `DebugBroadcastReceiver` | rango | STILL PRESENT | Exported, no permission, unchanged. |
+| ShannonRcs.apk `ScheduleAlarmReceiver` | rango | STILL PRESENT | Exported, no permission, unchanged. |
+| 529518244 | ShannonRcs.apk `DeviceProvisioningService` | rango | PATCHED | Service now requires a signature\|privileged permission where none existed before. |
+| ShannonRcs.apk `SipDelegateMessageInfoParser.getViaHeader` (+siblings) | rango | STILL PRESENT | Header-index result used directly with no failure check. |
+| ShannonRcs.apk `MultipartParser.parseMessage` / `ResourceListInfoDecoder.parse` | rango | STILL PRESENT | No array-length or null checks added. |
+| ShannonIms.apk `RilIndCallComposerMt.toString()` | rango | STILL PRESENT | Length check against the decoded string's true size still missing. |
+| OemRilService.apk `DataReader.getBytes(int)` | rango | STILL PRESENT | Allocation size unchecked. |
+| VendorSatelliteService.apk `ByteUtil.primitiveArrayToInt` | rango | STILL PRESENT | No length check before indexed array access. |
+| - | framework.jar `RecoverySystem.verifyPackage` | yogi | STILL PRESENT | Certificate selected for the trust check and the certificate actually used by signature verification can still differ. |
+| - | services.jar `FileService$FileServiceStub.enqueueOperation` | yogi | STILL PRESENT (high confidence) | No ownership/permission enforcement found before dispatch. |
+| - | gnssd SCSCGnssConfInterfaceUpdate | rango | STILL PRESENT (medium confidence) | Function present and unmodified at the resolved address. |
+| - | telephony-common.jar `WspTypeDecoder.seekXWapApplicationId` | yogi | STILL PRESENT | Empty catch block unchanged; the decode loop can still spin indefinitely. |
+| ShannonRcs.apk `SipDelegateMessageInfoParser.retrieveFeaturesFromSipMessage` | rango | STILL PRESENT | Unanchored substring match unchanged. |
+| - | MyVerizonServices.apk `UnlockReceiver` | yogi | N/A | Reported against this exact baseline image. |
+| - | IntentResolver.apk `PayloadToggleCursorResolver` (EXTRA_CHOOSER_ADDITIONAL_CONTENT_URI) | yogi | PATCHED (not counted) | New validation layer added, routing the URI through the system's real grant-permission check. Noted for completeness only: this specific vector does not map to a filed report of mine, so it is not counted among the 8. The other IntentResolver vector I did report (538314136, DISPLAY_ICON_URI) is still unpatched. |
+| - | system_ext_sepolicy.cil dcservice policy grants | yogi | STILL PRESENT | Same grants present, unchanged. |
+| - | bcmdhd4390.ko `wl_cfgnan_parse_sd_attr_data` | rango | not conclusively checked | Function location shifted; could not confirm whether this reflects a fix or unrelated drift. |
+
+## Summary
+
+- **Confirmed fixed, no reward or credit:** 8 (each with its own ticket number; one further fixed function, IntentResolver `PayloadToggleCursorResolver`, is listed above but not counted because it does not map to a report I filed)
+- **Confirmed still present, closed with reasoning that does not hold up:** 14 (the full subset relevant to Google's own VRP program is in the README; the remainder above covers additional Samsung and MediaTek submissions through the same program)
+- **Could not be determined:** a build/device mismatch, missing partition, or stripped binary prevented a reliable comparison; marked as such rather than guessed at.
+
 ## This is not just me
 
 In June 2026, The Register ran "Google told researcher 'Nice catch!' Then denied bug bounty for flaw it still hasn't fixed." Praise, then denial, then an unfixed bug. A separate researcher documented their own Google VRP case moving from "not a bug" to "not a vulnerability" to, finally, duplicate, meaning Google knew the whole time it was real. CSO Online has reported that legal experts believe these programs may raise labor-law questions, treating people who do the work of employees as disposable contractors whose finished work can be rejected with no explanation and no recourse.
