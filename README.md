@@ -1,16 +1,14 @@
 <p align="center">
-  <img src="https://github.com/jegly/jegly/blob/main/jes.gif" alt="Chaotic Cubes" width="250">
+  <img src="https://raw.githubusercontent.com/jegly/jegly/main/jes.gif" alt="Chaotic Cubes" width="250">
 </p>
 
-
-
-# My experiance with VRP, Google assigned 30+ of my zero-click Android bugs, had me sign a CLA, then closed them "duplicate" or "not a vulnerability" and shipped the fixes. Eight months on, a bounty they confirmed in writing is still half unpaid. 85+ Total bugs submitted over 8 months of everyday work.
+# My experience with VRP, Google assigned 30+ of my zero-click Android bugs, had me sign a CLA, then closed them "duplicate" or "not a vulnerability" and shipped the fixes. Eight months on, a bounty they confirmed in writing is still half unpaid. 85+ total bugs submitted over 8 months of everyday work.
 
 This repository is the evidence archive for a pattern I have documented across my own Android VRP reports to Google. It contains the methodology, the ticket-by-ticket case index, and the before/after code for every claim made here. Everything below is sourced from Buganizer ticket text I have access to and from binary/bytecode comparisons I ran myself against Google's own shipped factory images. Where I quote Google, the quote is verbatim from the ticket.
 
 ## Summary
 
-I have spent most of the last four months doing security research on a current Pixel, reverse engineering the Samsung radio-interface binaries, the IMS and RTP native stack, the Trusty trusted apps, and the telephony framework. Over thirty distinct findings, most with a working proof of concept, several confirmed with AddressSanitizer against real compiled code.
+I have spent most of the last eight months doing security research on a current Pixel, reverse engineering the Samsung radio-interface binaries, the IMS and RTP native stack, the Trusty trusted apps, and the telephony framework. Over thirty distinct findings, most with a working proof of concept, several confirmed with AddressSanitizer against real compiled code.
 
 Here is what I have to show for it. One bounty, for two older bugs, that Google confirmed in writing at five hundred dollars total. Half of it, two hundred fifty dollars, has been paid. The other half has been "processing" since January 2026. That is over eight months of "manual exception workflow" and "we cannot give you an exact date." Every one of the thirty-plus newer findings has been closed for nothing, while the fixes get logged to ship anyway.
 
@@ -94,13 +92,13 @@ This table is not a payment claim. None of these bugs were fixed, so no reward i
 | 538314136 | IntentResolver.apk `UriMetadataReaderImpl.getMetadata` (DISPLAY_ICON_URI) | Infeasible | Unchanged. No ownership check on the cross-profile URI read. A different cross-profile leak in the same app (EXTRA_CHOOSER_ADDITIONAL_CONTENT_URI) was fixed in the same window. |
 | 560878423 | libimsstack.so `SipMessageFraming::ParseMessageBody` | Can't Repro | Unchanged. A negative content length still passes a signed comparison into the completed-message state instead of being rejected. |
 
-A further set of findings submitted to Samsung and MediaTek through the same program follows the identical pattern: closed duplicate, infeasible, or "below bar," with the reported code confirmed unchanged in the current image. The full line-by-line audit, covering over seventy individual findings with their exact evidence and verdicts, is in `PATCH_AUDIT_PUBLIC.md` in this repository.
+A further set of findings submitted to Samsung and MediaTek through the same program follows the identical pattern: closed duplicate, infeasible, or "below bar," with the reported code confirmed unchanged in the current image. The full line-by-line audit follows below.
 
 # Full audit: factory-image verification of reported findings
 
 Baseline images: rango (Pixel 10 Pro Fold, build CP3A.260905.009) and yogi (Pixel 11 Pro Fold, build CD1A.260905.001.B1), both dated September 2026.
 
-Method: for each finding below, the exact binary, library, or jar named in the original report was pulled from the current factory image and the cited function was located and compared against the report's description. See the README for the full methodology and the four verdict categories (PATCHED, STILL PRESENT, N/A, CANT-DETERMINE).
+Method: for each finding below, the exact binary, library, or jar named in the original report was pulled from the current factory image and the cited function was located and compared against the report's description. See the methodology section above for the four verdict categories.
 
 | Ticket | Component / function | Device | Verdict | Evidence |
 |---|---|---|---|---|
@@ -156,35 +154,35 @@ Method: for each finding below, the exact binary, library, or jar named in the o
 | - | rkpdapp.google.apk `X509Utils.verifyCertChain` | yogi | STILL PRESENT | Caller-supplied root used as the sole trust anchor, no hardcoded pin. |
 | 559533853 | pmgd (native Rust binary) | yogi | CANT-DETERMINE | Aggressive symbol stripping; the relevant function could not be identified. |
 | 537920968 | nfc_nci.st21nfc.default.so `handlePollingLoopData` | rango | STILL PRESENT | Same undersized length-check logic confirmed at the function's new address. |
-| - | nfc_nci.st21nfc.default.so `FwUpdateHandler` | rango | not rigorously checked | Function located but no precise comparison pattern available. |
+| 537923579 | nfc_nci.st21nfc.default.so `FwUpdateHandler` | rango | not rigorously checked | Function located but no precise comparison pattern available. |
 | 538311587 | android.hardware.secure_element-service.uicc | rango | STILL PRESENT | Same mutex/slot/type offsets, no per-call correlation token. |
 | 563958561 | framework-res.apk protected-broadcast list + SettingsGoogle.apk receivers | yogi | STILL PRESENT | Broadcast still unprotected; checked receivers still exported, no permission. Still Assigned. |
-| - | PrebuiltBugle.apk `ConversationSuggestionDeserializer` / `LighterWebView` | yogi | STILL PRESENT | Scheme blocklist and allowlist logic unchanged. |
-| - | PrebuiltBugle.apk `LighterWebView` (related finding) | yogi | STILL PRESENT | Same root cause as above. |
+| 541103771 | PrebuiltBugle.apk `ConversationSuggestionDeserializer` / `LighterWebView` | yogi | STILL PRESENT | Scheme blocklist and allowlist logic unchanged. |
+| 541103771 | PrebuiltBugle.apk `LighterWebView` (related finding) | yogi | STILL PRESENT | Same root cause as above. |
 | - | PrebuiltBugle.apk MMS PDU decoder | rango | STILL PRESENT | Allocation site still has no upper-bound check. |
 | - | android.hardware.samsung.uwb-service `match_dev_ctrl_cmd` | rango | CANT-DETERMINE | Build differs from the reported device; needs the matching image. |
-| ShannonRcs.apk `DebugBroadcastReceiver` | rango | STILL PRESENT | Exported, no permission, unchanged. |
-| ShannonRcs.apk `ScheduleAlarmReceiver` | rango | STILL PRESENT | Exported, no permission, unchanged. |
+| 529102332 | ShannonRcs.apk `DebugBroadcastReceiver` | rango | STILL PRESENT | Exported, no permission, unchanged. |
+| - | ShannonRcs.apk `ScheduleAlarmReceiver` | rango | STILL PRESENT | Exported, no permission, unchanged. |
 | 529518244 | ShannonRcs.apk `DeviceProvisioningService` | rango | PATCHED | Service now requires a signature\|privileged permission where none existed before. |
-| ShannonRcs.apk `SipDelegateMessageInfoParser.getViaHeader` (+siblings) | rango | STILL PRESENT | Header-index result used directly with no failure check. |
-| ShannonRcs.apk `MultipartParser.parseMessage` / `ResourceListInfoDecoder.parse` | rango | STILL PRESENT | No array-length or null checks added. |
-| ShannonIms.apk `RilIndCallComposerMt.toString()` | rango | STILL PRESENT | Length check against the decoded string's true size still missing. |
-| OemRilService.apk `DataReader.getBytes(int)` | rango | STILL PRESENT | Allocation size unchecked. |
-| VendorSatelliteService.apk `ByteUtil.primitiveArrayToInt` | rango | STILL PRESENT | No length check before indexed array access. |
-| - | framework.jar `RecoverySystem.verifyPackage` | yogi | STILL PRESENT | Certificate selected for the trust check and the certificate actually used by signature verification can still differ. |
-| - | services.jar `FileService$FileServiceStub.enqueueOperation` | yogi | STILL PRESENT (high confidence) | No ownership/permission enforcement found before dispatch. |
-| - | gnssd SCSCGnssConfInterfaceUpdate | rango | STILL PRESENT (medium confidence) | Function present and unmodified at the resolved address. |
+| - | ShannonRcs.apk `SipDelegateMessageInfoParser.getViaHeader` (+siblings) | rango | STILL PRESENT | Header-index result used directly with no failure check. |
+| - | ShannonRcs.apk `MultipartParser.parseMessage` / `ResourceListInfoDecoder.parse` | rango | STILL PRESENT | No array-length or null checks added. |
+| 545958850 | ShannonIms.apk `RilIndCallComposerMt.toString()` | rango | STILL PRESENT | Length check against the decoded string's true size still missing. |
+| - | OemRilService.apk `DataReader.getBytes(int)` | rango | STILL PRESENT | Allocation size unchecked. |
+| - | VendorSatelliteService.apk `ByteUtil.primitiveArrayToInt` | rango | STILL PRESENT | No length check before indexed array access. |
+| 541986810 | framework.jar `RecoverySystem.verifyPackage` | yogi | STILL PRESENT | Certificate selected for the trust check and the certificate actually used by signature verification can still differ. |
+| 547481980 | services.jar `FileService$FileServiceStub.enqueueOperation` | yogi | STILL PRESENT (high confidence) | No ownership/permission enforcement found before dispatch. |
+| 555979319 | gnssd SCSCGnssConfInterfaceUpdate | rango | STILL PRESENT (medium confidence) | Function present and unmodified at the resolved address. |
 | - | telephony-common.jar `WspTypeDecoder.seekXWapApplicationId` | yogi | STILL PRESENT | Empty catch block unchanged; the decode loop can still spin indefinitely. |
-| ShannonRcs.apk `SipDelegateMessageInfoParser.retrieveFeaturesFromSipMessage` | rango | STILL PRESENT | Unanchored substring match unchanged. |
+| - | ShannonRcs.apk `SipDelegateMessageInfoParser.retrieveFeaturesFromSipMessage` | rango | STILL PRESENT | Unanchored substring match unchanged. |
 | - | MyVerizonServices.apk `UnlockReceiver` | yogi | N/A | Reported against this exact baseline image. |
 | - | IntentResolver.apk `PayloadToggleCursorResolver` (EXTRA_CHOOSER_ADDITIONAL_CONTENT_URI) | yogi | PATCHED (not counted) | New validation layer added, routing the URI through the system's real grant-permission check. Noted for completeness only: this specific vector does not map to a filed report of mine, so it is not counted among the 8. The other IntentResolver vector I did report (538314136, DISPLAY_ICON_URI) is still unpatched. |
-| - | system_ext_sepolicy.cil dcservice policy grants | yogi | STILL PRESENT | Same grants present, unchanged. |
-| - | bcmdhd4390.ko `wl_cfgnan_parse_sd_attr_data` | rango | not conclusively checked | Function location shifted; could not confirm whether this reflects a fix or unrelated drift. |
+| 558470054 | system_ext_sepolicy.cil dcservice policy grants | yogi | STILL PRESENT | Same grants present, unchanged. |
+| 547477982 | bcmdhd4390.ko `wl_cfgnan_parse_sd_attr_data` | rango | not conclusively checked | Function location shifted; could not confirm whether this reflects a fix or unrelated drift. |
 
-## Summary
+## Summary of the full audit
 
 - **Confirmed fixed, no reward or credit:** 8 (each with its own ticket number; one further fixed function, IntentResolver `PayloadToggleCursorResolver`, is listed above but not counted because it does not map to a report I filed)
-- **Confirmed still present, closed with reasoning that does not hold up:** 14 (the full subset relevant to Google's own VRP program is in the README; the remainder above covers additional Samsung and MediaTek submissions through the same program)
+- **Confirmed still present, closed with reasoning that does not hold up:** 14 Google VRP tickets, plus the additional Samsung and MediaTek submissions above
 - **Could not be determined:** a build/device mismatch, missing partition, or stripped binary prevented a reliable comparison; marked as such rather than guessed at.
 
 ## This is not just me
