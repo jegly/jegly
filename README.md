@@ -2,9 +2,7 @@
   <img src="https://github.com/jegly/jegly/blob/main/jes.gif" alt="Chaotic Cubes" width="250">
 </p>
 
-
-
-# Google assigned 30+ of my zero-click Android bugs, had me sign a CLA, then closed them "duplicate" or "not a vulnerability" and shipped the fixes. Eight months on, a bounty they confirmed in writing is still half unpaid. 85+ Bugs submited in total 8 months of everyday work. 
+# Google assigned 30+ of my zero-click Android bugs, had me sign a CLA, then closed them "duplicate" or "not a vulnerability" and shipped the fixes. Eight months on, a bounty they confirmed in writing is still half unpaid.
 
 This repository is the evidence archive for a pattern I have documented across my own Android VRP reports to Google. It contains the methodology, the ticket-by-ticket case index, and the before/after code for every claim made here. Everything below is sourced from Buganizer ticket text I have access to and from binary/bytecode comparisons I ran myself against Google's own shipped factory images. Where I quote Google, the quote is verbatim from the ticket.
 
@@ -14,7 +12,7 @@ I have spent most of the last four months doing security research on a current P
 
 Here is what I have to show for it. One bounty, for two older bugs, that Google confirmed in writing at five hundred dollars total. Half of it, two hundred fifty dollars, has been paid. The other half has been "processing" since January 2026. That is over eight months of "manual exception workflow" and "we cannot give you an exact date." Every one of the thirty-plus newer findings has been closed for nothing, while the fixes get logged to ship anyway.
 
-This is not one unlucky ticket, and it is two separate problems, not one. Going through Google's own current factory images function by function, I can confirm **9 of my findings were fixed in the shipped code with no reward or credit at all**. That is the money and credit problem. Separately, **14 more were closed as duplicate, infeasible, or can't-repro, and the exact defect I reported is still unchanged, still shipping, in the current build today**. Nobody owes a reward for an unfixed bug. What that second group proves is different: that the stated reason for closing them does not hold up against the actual code. Both tables below list these by ticket number, kept apart on purpose.
+This is not one unlucky ticket, and it is two separate problems, not one. Going through Google's own current factory images function by function, I can confirm **8 of my findings were fixed in the shipped code with no reward or credit at all**. That is the money and credit problem. Separately, **14 more were closed as duplicate, infeasible, or can't-repro, and the exact defect I reported is still unchanged, still shipping, in the current build today**. Nobody owes a reward for an unfixed bug. What that second group proves is different: that the stated reason for closing them does not hold up against the actual code. Both tables below list these by ticket number, kept apart on purpose.
 
 ## Methodology
 
@@ -30,7 +28,7 @@ Four possible verdicts:
 - **PATCHED** — the code changed. A bound check, a permission check, or a validation step was added that was not there when I reported it.
 - **STILL PRESENT** — the code is unchanged. The defect described in the report is still shipping today.
 - **N/A** — the bug was reported against this exact build, so there is no before/after window to check, or Google already acknowledged the behavior is an intentional design choice rather than a defect.
-- **CANT-DETERMINE** — the binary is not present in this factory image, or the build differs enough (different device, different compiler) that the comparison is not reliable. Marked honestly rather than guessed at.
+- **CANT-DETERMINE** — the binary is not present in this factory image, or the build differs enough (different device, different compiler) that the comparison is not reliable.
 
 I did not use Google's own security bulletin or the supplemental patch list as a substitute for this. A silent fix with no bulletin entry and no credit would not show up there. The only way to find one is to diff the actual shipped code, which is what this repository documents.
 
@@ -68,9 +66,10 @@ Every row below was checked directly against the current September 2026 factory 
 | 545948346 | libpixelimsmedia.so `RtpSession::numberOfReportBlocks` | Duplicate, "previously reported by an internal Google engineer" | Fixed. An underflow check was added before the division that used to produce garbage. |
 | 540755547 | libpixelimsmedia.so `RtcpChunk::decodeRtcpChunk` | Duplicate | Fixed. A bound check on the SDES item length was added before the allocation and copy. |
 | 541096815 | libpixelimsmedia.so `RtpDecoderNode::DecodeRtpHeaderExtension` | Infeasible, "not a security vulnerability" | Fixed. The length byte is now read unsigned instead of signed, with a new bound check added after it. |
-| (no ticket ID yet) | ShannonRcs.apk `DeviceProvisioningService` (Samsung-side submission, same program) | - | Fixed. The service now requires a signature\|privileged permission where none existed before. |
+| 540753210 | libpixelimsmedia.so `RtcpFbPacket::decodeRtcpFbPacket` | Duplicate | Fixed. A length check was added before the operation that previously underflowed unconditionally. |
+| 529518244 | ShannonRcs.apk `DeviceProvisioningService` | Duplicate | Fixed. The service now requires a signature\|privileged permission where none existed before. |
 
-Three more confirmed fixes do not yet have a Buganizer ticket ID attached and are not in the table above: a bound check added to `RtcpFbPacket::decodeRtcpFbPacket`, a new permission check added to IntentResolver's `PayloadToggleCursorResolver` (a different cross-profile leak in the same app as 538314136 below, fixed, while the one I reported in that ticket was not), and the ShannonRcs fix in the table row directly above. That brings the confirmed-fixed total to 9.
+That is 8 findings, each with its own ticket number, that Google closed as duplicate or infeasible and then fixed in the shipping image.
 
 ## Case index: still unpatched, closed with reasoning that does not hold up
 
@@ -93,7 +92,7 @@ This table is not a payment claim. None of these bugs were fixed, so no reward i
 | 538314136 | IntentResolver.apk `UriMetadataReaderImpl.getMetadata` (DISPLAY_ICON_URI) | Infeasible | Unchanged. No ownership check on the cross-profile URI read. A different cross-profile leak in the same app (EXTRA_CHOOSER_ADDITIONAL_CONTENT_URI) was fixed in the same window. |
 | 560878423 | libimsstack.so `SipMessageFraming::ParseMessageBody` | Can't Repro | Unchanged. A negative content length still passes a signed comparison into the completed-message state instead of being rejected. |
 
-A further set of findings submitted to Samsung and MediaTek through the same program follows the identical pattern: closed duplicate, infeasible, or "below bar," with the reported code confirmed unchanged in the current image. The full line-by-line audit, covering over seventy individual findings with their exact file offsets, disassembly, and verdicts, is in `PATCH_AUDIT_SEPT.md` in this repository.
+A further set of findings submitted to Samsung and MediaTek through the same program follows the identical pattern: closed duplicate, infeasible, or "below bar," with the reported code confirmed unchanged in the current image. The full line-by-line audit, covering over seventy individual findings with their exact evidence and verdicts, is in `PATCH_AUDIT_PUBLIC.md` in this repository.
 
 ## This is not just me
 
@@ -101,10 +100,3 @@ In June 2026, The Register ran "Google told researcher 'Nice catch!' Then denied
 
 I am not against Google generally. I fork and contribute to their open source projects. This is specifically about what happened when I reported real, working security findings through their own stated process.
 
-## What I am asking
-
-If you have run findings through the Android VRP, or any large vendor's bug bounty program, and watched a report get assigned, then closed as duplicate or infeasible while the fix shipped anyway, I would like to know if your experience matches this one. I am happy to answer technical questions on any specific finding in this repository.
-
----
-
-*Methodology notes, full audit table, and raw ticket references are maintained in this repository alongside this README.*
