@@ -168,5 +168,4 @@ Baseline images: rango (Pixel 10 Pro Fold, build CP3A.260905.009) and yogi (Pixe
 
 In June 2026, The Register ran "Google told researcher 'Nice catch!' Then denied bug bounty for flaw it still hasn't fixed." Praise, then denial, then an unfixed bug. A separate researcher documented their own Google VRP case moving from "not a bug" to "not a vulnerability" to, finally, duplicate, meaning Google knew the whole time it was real. CSO Online has reported that legal experts believe these programs may raise labor-law questions, treating people who do the work of employees as disposable contractors whose finished work can be rejected with no explanation and no recourse.
 
-I am not against Google generally. I fork and contribute to their open source projects. This is specifically about what happened when I reported real, working security findings through their own stated process.
-
+I am not against Google. One of my own projects, Box, started as a fork of their AI Edge Gallery, and I have built on it every day for the past twelve months. Over that time Google has pulled features from my fork back into their own project, so the contribution has gone both ways and in good faith. This is specifically about what happened when I reported real, working security findings through their own stated process.
