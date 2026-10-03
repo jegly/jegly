@@ -99,10 +99,3 @@ In June 2026, The Register ran "Google told researcher 'Nice catch!' Then denied
 
 I am not against Google generally. I fork and contribute to their open source projects. This is specifically about what happened when I reported real, working security findings through their own stated process.
 
-## What I am asking
-
-If you have run findings through the Android VRP, or any large vendor's bug bounty program, and watched a report get assigned, then closed as duplicate or infeasible while the fix shipped anyway, I would like to know if your experience matches this one. I am happy to answer technical questions on any specific finding in this repository.
-
----
-
-*Methodology notes, full audit table, and raw ticket references are maintained in this repository alongside this README.*
