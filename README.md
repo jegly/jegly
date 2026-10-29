@@ -2,7 +2,7 @@
   <img src="https://github.com/jegly/jegly/blob/main/jes.gif" alt="Chaotic Cubes" width="250">
 </p>
 
-# A year in Google's VRP: ~85 reports, one $250 payment, and the bugs they fixed after telling me they weren't real
+# A year in Google's VRP: ~85 reports, one $250 payment, and the bugs they fixed after telling me they weren't real... 
 
 For most of the last year this is what I've done. I reverse engineered the Samsung radio stack, the IMS and RTP media code, the Trusty trusted apps, the MediaTek M90 modem RIL, and the Android telephony framework on Google's current phones, and many more things. I filed eighty six reports through the Android and Google Devices Vulnerability Reward Program. 95% had a working proof of concept. 
 
