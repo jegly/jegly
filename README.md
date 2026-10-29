@@ -4,7 +4,7 @@
 
 # A year in Google's VRP: ~85 reports, one $250 payment, and the bugs they fixed after telling me they weren't real
 
-For most of the last year this is what I've done. I reverse engineered the Samsung radio stack, the IMS and RTP media code, the Trusty trusted apps, the MediaTek M90 modem RIL, and the Android telephony framework on Google's current phones. I filed roughly eighty five reports through the Android and Google Devices Vulnerability Reward Program. Most had a working proof of concept. Several I confirmed with AddressSanitizer against the actual compiled code.
+For most of the last year this is what I've done. I reverse engineered the Samsung radio stack, the IMS and RTP media code, the Trusty trusted apps, the MediaTek M90 modem RIL, and the Android telephony framework on Google's current phones, and many more things. I filed roughly eighty six reports through the Android and Google Devices Vulnerability Reward Program. 95% had a working proof of concept. 
 
 Total paid, for all of it: **$250. One payment.**
 
