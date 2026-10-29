@@ -6,7 +6,7 @@
 
 For most of the last year this is what I've done. I reverse engineered the Samsung radio stack, the IMS and RTP media code, the Trusty trusted apps, the MediaTek M90 modem RIL, and the Android telephony framework on Google's current phones, and many more things. I filed roughly eighty six reports through the Android and Google Devices Vulnerability Reward Program. 95% had a working proof of concept. 
 
-Total paid, for all of it: **$250. One payment.**
+Total paid, for all of it: **$250USD. One payment.**
 
 This isn't one unlucky ticket. The same thing keeps happening three different ways.
 
@@ -22,11 +22,11 @@ And the program rate limits anyone with fewer than five rewarded reports to thre
 
 ## Where this stands right now
 
-- **$250, Safety Center report (Moderate).** Approved in writing in January, reconfirmed in writing several times since. Unpaid ten months later. Ticket closed.
-- **Two High severity reports, still "Assigned."** Both formally rated High by Google. Rewards undetermined, CVEs not assigned. One of the two is already fixed in Google's shipped code.
+- **$250, Safety Center report (Moderate).** Approved in writing in January, reconfirmed in writing several times since. Unpaid ten months later. Ticket closed...
+- **Two High severity reports, still "Assigned."** Both formally rated High by Google. Rewards undetermined, CVEs not assigned. One of the two is already fixed in Google's shipped code in the latest firmware images as of now.. ?!?!? 
 - **One Moderate report, still "Assigned."** Rated Moderate on 28 October. Reward undetermined.
-- **Ten findings fixed after closure.** Closed as duplicate, infeasible, or not-a-vulnerability, then fixed in shipped code. No reward, no credit.
-- **Total actually received across all of it: $250.**
+- **Ten findings fixed after closure.** Closed as duplicate, infeasible, or not-a-vulnerability, then fixed in shipped code. No reward, no credit.. !?
+- **Total actually received across all of it: $250..**
 
 Everything in the tables below is a **closed** report, with Google's own words quoted from the tracker. The three still "Assigned" reports and anything under active coordinated disclosure are kept out of the technical detail on purpose.
 
@@ -41,13 +41,13 @@ Same method for every closed report in the tables:
 
 Verdicts are **PATCHED** (a check was added that wasn't there when I reported it), **STILL PRESENT** (code unchanged), **N/A** (reported against this exact build, or Google called it intended design), and **CANT-DETERMINE** (binary absent or build mismatch).
 
-I didn't use Google's bulletin or supplemental patch list for this. A silent fix with no bulletin entry and no credit doesn't appear there by definition. You have to diff the shipped code, which is what this is.
+I didn't use Google's bulletin or supplemental patch list for this. A silent fix with no bulletin entry and no credit doesn't appear there by definition. You have to diff the shipped code, which is what this is..
 
 ## The reward they promised in writing and still haven't paid
 
 On ticket **467575499 / 470814942**, on **23 January 2026**, Google wrote that they had "confirmed this is a valid bug," were "increasing severity," "increasing reward," and would "issue a payment for the new amount once it has been processed." On **24 April**, with no new analysis, they reversed all three. The same bug now "does not qualify for a reward or severity increase," called a "Final Assessment."
 
-In June they wrote that they wanted to "stand by our word regarding the reward." On **10 July** they gave the numbers: "$250 for Safety Center, $250 for the mic bug, $500 total," and said they were "honoring our initial promise," while still calling the Safety Center half a duplicate with no security impact. The mic half was paid. The Safety Center half went into a "discretionary payment exception" with, in their words, no "exact credit date." That was January. The most recent reply, in October, says the same thing: still approved, no date.
+In June they wrote that they wanted to "stand by our word regarding the reward." On **10 July** they gave the numbers: "$250 for Safety Center, $250 for the mic bug, $500USD total," and said they were "honoring our initial promise," while still calling the Safety Center half a duplicate with no security impact. The mic half was paid. The Safety Center half went into a "discretionary payment exception" with, in their words, no "exact credit date." That was January. The most recent reply, in October, says the same thing: still approved, no date.
 
 ## The duplicate-ID collision they admitted
 
@@ -85,7 +85,7 @@ Two more are fixed on the QPR3 beta (DP11.261002.005) and not yet on stable:
 
 ## Still unpatched, closed with reasoning that doesn't hold
 
-This is not a payment claim. None of these were fixed, so no reward is owed. It shows the stated closure reason doesn't match the code: the defect is still there, unchanged, in the current factory image. Every row is a closed report.
+This is not a payment claim. None of these were fixed, It shows the stated closure reason doesn't match the code: the defect is still there, unchanged, in the current factory image. Every row is a closed report.
 
 | Ticket | Component / function | Closure | Verdict |
 |---|---|---|---|
@@ -108,13 +108,13 @@ One MediaTek RIL finding, 555425202 (`onPcoInfoNotify`), changed in the QPR3 bui
 
 ## Count
 
-- Fixed in shipped code, no reward or credit: eight on stable, two on the QPR3 beta. Ten, each its own ticket.
+- Fixed in shipped code, no reward or credit: eight on stable, two on the QPR3 beta. Ten, each its own ticket...
 - Still present, closed with reasoning the code contradicts: the tickets above, plus more Samsung and MediaTek submissions through the same program.
-- Could not be determined: a few where a build or device mismatch, a missing partition, or a stripped binary made the diff unreliable. Marked as such, not guessed.
+- Could not be determined: a few where a build or device mismatch, a missing partition, or a stripped binary made the diff unreliable. Marked as such, not guessed...
 
 ## It isn't only me
 
-In June 2026 The Register covered Justin O'Leary and his "ConfigConfusion" flaw in Google Config Connector, where a user in one Kubernetes namespace could reach GCP organization-owner rights. Google replied "Nice catch!", rated it P1/S1 and accepted, then reversed to "working as intended," denied the bounty, and left it unpatched with the tracker still showing it accepted. Acknowledged, then denied, still unfixed.
+In June 2026 The Register covered Justin O'Leary and his "ConfigConfusion" flaw in Google Config Connector, where a user in one Kubernetes namespace could reach GCP organization-owner rights. Google replied "Nice catch!", rated it P1/S1 and accepted, then reversed to "working as intended," denied the bounty, and left it unpatched with the tracker still showing it accepted. Acknowledged, then denied, still unfixed...
 
 CSO Online covered the broader pattern in 2020 (J.M. Porup, *"Bug bounty platforms buy researcher silence, violate labor laws, critics say"*): critics, including legal scholars such as Amit Elazari and Katie Moussouris, argue these programs can be used to suppress disclosure, that researchers often have no legal safe harbor, and that the model raises labor-law questions. The "disposable contractor whose finished work gets rejected with no recourse" framing is mine, not theirs.
 
