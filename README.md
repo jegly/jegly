@@ -121,3 +121,5 @@ CSO Online covered the broader pattern in 2020 (J.M. Porup, *"Bug bounty platfor
 ## I'm not against Google
 
 One of my own projects, Box, started as a fork of their AI Edge Gallery, and I've worked on it most days for the past year. Google has pulled features from my fork back into their project, so it has gone both ways and in good faith. This is specifically about what happened when I reported real, working security bugs through their own process: they used the work, and most of the time they didn't pay for it.
+
+I also maintain Iris which is a hardened Chromium fork focused on Modern day security and privacy. 
