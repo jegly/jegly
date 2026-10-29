@@ -18,7 +18,6 @@ This isn't one unlucky ticket. The same thing keeps happening three different wa
 
 One line from that thread I still can't parse. They told me, in writing, that they are paying the Safety Center reward *"even though our final technical assessment rated it as a duplicate of a report with no security impact."* If it has no security impact there is no basis to pay it. If it is worth paying, "no security impact" is false. Both are in the ticket.
 
-And the program rate limits anyone with fewer than five rewarded reports to three open at a time. My rewards kept getting closed or stalled, so for months I couldn't file the next batch. You can't get rewarded because you're rate limited, and you're rate limited because you haven't been rewarded.
 
 ## Where this stands right now
 
