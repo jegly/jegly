@@ -4,7 +4,7 @@
 
 # A year in Google's VRP: ~85 reports, one $250 payment, and the bugs they fixed after telling me they weren't real
 
-For most of the last year this is what I've done. I reverse engineered the Samsung radio stack, the IMS and RTP media code, the Trusty trusted apps, the MediaTek M90 modem RIL, and the Android telephony framework on Google's current phones, and many more things. I filed roughly eighty six reports through the Android and Google Devices Vulnerability Reward Program. 95% had a working proof of concept. 
+For most of the last year this is what I've done. I reverse engineered the Samsung radio stack, the IMS and RTP media code, the Trusty trusted apps, the MediaTek M90 modem RIL, and the Android telephony framework on Google's current phones, and many more things. I filed eighty six reports through the Android and Google Devices Vulnerability Reward Program. 95% had a working proof of concept. 
 
 Total paid, for all of it: **$250USD. One payment.**
 
@@ -54,6 +54,16 @@ In June they wrote that they wanted to "stand by our word regarding the reward."
 Google closes a report as a duplicate against an internal canonical bug ID. I asked for the specific IDs behind several of mine. They gave the **same internal ID, 479203197**, as the original for two unrelated bugs: a Rust keystore panic in a trusted app, and a C++ out-of-bounds read in the RTP media parser. Different languages, different subsystems, different teams. One internal report is not the root cause of both.
 
 They admitted it in writing, on both tickets: "Giving you this ID for your other report was a mistake on our end," and separately, "we made a mistake when linking the duplicate tickets." So at least one "verified duplicate" was stamped without anyone checking it against the report it named.
+
+## The duplicates that appear months later, against reports I can't see
+
+A lot of my reports followed the same arc. Filed, Assigned, worked by an engineer, and then months later, with no new technical comment in between, the status quietly flips to Duplicate. The reason is always an internal canonical bug ID I cannot view, usually with a line that it was "previously reported by an internal Google engineer." I have no way to see that internal report, confirm it exists, or confirm it actually predates mine. I am asked to take the dedup on faith.
+
+And there are a lot of them. Of the 86 reports in my tracker, 33 were closed as Duplicate. A few of those are my own resubmissions and appeals collapsed back together, so call it roughly 26 distinct findings that Google agreed were real and then attributed to a report I am not allowed to see. A duplicate is not a rejection. It is Google confirming the bug exists and saying someone got there first. For 26 of mine, "someone" is an internal engineer who, by their account, found the identical bug the same month I did, against firmware that had only just shipped.
+
+The timing is what I keep coming back to. I always work on the current month's latest factory image, so every report I file is against firmware that was released that same month, often only days before. A bug I pulled out of an image that shipped last week, coming back weeks later as something Google has supposedly had open internally for months, is a claim I am in no position to check, and it happens over and over.
+
+In the one case where I pushed hard enough to get the canonical's build, it was at least plausible. 549662989 was deduped to a report filed against a Pixel 10 (blazer:16/CP1A.260505.005), and PixelModemService ships that same code on both generations, so I accepted it. But that is the exception. The collision above is what the process looks like the moment I can actually check it: the same internal ID handed out as the "original" for two completely unrelated bugs, admitted in writing as a mistake. If one "verified duplicate" was stamped without anyone matching it to the report it named, I have no reason to assume the two dozen others I cannot verify were handled any more carefully.
 
 ## The "not a vulnerability" template, used before and retracted
 
