@@ -105,6 +105,21 @@ Both were closed Duplicate of internal report 517376969, which Google says its i
 
 So this one followed the whole pattern in a single pair of tickets: reported early, source-verified, closed duplicate, silently fixed in a later build, now independently public, and unpaid.
 
+## The fix is in the build before the report is resolved
+
+The clearest way to see it is two factory images side by side at the same patch level. The WAP-push crash (538367541 / 543174762, closed Duplicate) and the SIM Toolkit crash (555981160, closed "not reproducible," later corrected to Duplicate). Both closed. Neither paid.
+
+Same file, same security patch level, two builds:
+
+- Stable, google/yogi/yogi:17/CD1A.261005.003 (2026-10-05): still unguarded, exactly as reported.
+- QPR3 beta, google/yogi_beta/yogi:17/DP11.261002.005 (same patch level): the guard the report asked for is already there. For the WAP-push bug, a bounds check before the allocation. For the SIM Toolkit bug, a `length < 1` check before it.
+
+Run the diff yourself:
+
+    jadx -d out telephony-common.jar
+
+The bug was real enough to fix. The fix is in a shipping build. The report that found it and described that exact fix was closed as a duplicate or a non-issue and paid nothing, credited instead to an internal report I am not allowed to see, filed on a date I cannot verify, against firmware that had only just shipped.
+
 ## Still unpatched, closed with reasoning that doesn't hold
 
 This is not a payment claim. None of these were fixed, It shows the stated closure reason doesn't match the code: the defect is still there, unchanged, in the current factory image. Every row is a closed report.
