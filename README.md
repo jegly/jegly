@@ -92,6 +92,19 @@ Two more are fixed on the QPR3 beta (DP11.261002.005) and not yet on stable:
 | 555981160 | telephony-common.jar `ValueParser.retrieveItemsIconId` | Can't Repro | Fixed on QPR3 beta: a `length < 1` guard added before the array allocation. Still unchanged on the current stable image. |
 | 538367541 / 543174762 | telephony-common.jar `WapPushOverSms.decodeWapPdu` | Duplicate | Fixed on QPR3 beta: a bounds check (`decodedDataLength + value <= buffer length`) added before the allocation. Still unchanged on stable. |
 
+## The WAP-push bug just went public
+
+On 30 October 2026 a researcher independently disclosed a zero-click WAP-push crash in Android's telephony stack (smsofdeath.com), written up here: https://cybersecuritynews.com/zero-click-android-vulnerability/ . A single malformed WAP-push SMS makes `WapPushOverSms.decodeWapPdu` allocate an array from an unvalidated, truncated header length, throwing an uncaught `NegativeArraySizeException` that kills the telephony process; the carrier's redelivery of the unacknowledged message turns one SMS into a repeating outage.
+
+I reported that exact defect twice, with the `WspTypeDecoder`/`WapPushOverSms` root cause traced frame by frame and an executed proof against the shipped decoder:
+
+- Issue 538367541, filed 24 July 2026 — https://issuetracker.google.com/issues/538367541
+- Issue 543174762, filed 6 August 2026 — https://issuetracker.google.com/issues/543174762
+
+Both were closed Duplicate of internal report 517376969, which Google says its internal automated testing filed in late May 2026. The fix, a bounds check before the allocation, shipped in the QPR3 beta (`DP11.261002.005`) and is still absent from the current stable build. On 30 October 2026 Google told me on the record that because the internal tool found it first, my reports are "not eligible for a reward."
+
+So this one followed the whole pattern in a single pair of tickets: reported early, source-verified, closed duplicate, silently fixed in a later build, now independently public, and unpaid.
+
 ## Still unpatched, closed with reasoning that doesn't hold
 
 This is not a payment claim. None of these were fixed, It shows the stated closure reason doesn't match the code: the defect is still there, unchanged, in the current factory image. Every row is a closed report.
