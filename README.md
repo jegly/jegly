@@ -4,7 +4,7 @@
 
 # A year in Google's VRP: ~85 reports, one $250 payment, and the bugs they fixed after telling me they weren't real... 
 
-## FYI I'm not against Google
+## FYI I'm not against Google..
 
 One of my own projects, Box, started as a fork of their AI Edge Gallery, and I've worked on it most days for the past year. Google has pulled features from my fork back into their project, so it has gone both ways and in good faith. This is specifically about what happened when I reported real, working security bugs through their own process: they used the work, and most of the time they didn't pay for it.
 
