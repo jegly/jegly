@@ -28,7 +28,7 @@ One line from that thread I still can't parse. They told me, in writing, that th
 ## Where this stands right now
 
 - **$250, Safety Center report (Moderate).** Approved in writing in January, reconfirmed in writing several times since. Unpaid ten months later. Ticket closed...
-- **Two High severity reports, still "Assigned."** Both formally rated High by Google. Rewards undetermined, CVEs not assigned. One of the two is already fixed in Google's shipped code in the latest firmware images as of now.. ?!?!? 
+- **Two High severity reports, still "Assigned."** Both formally rated High by Google. Rewards undetermined, CVEs awaiting to be assigned. One of the two is already fixed in Google's shipped code in the latest firmware images as of now.. ?!?!? 
 - **One Moderate report, still "Assigned."** Rated Moderate on 28 October. Reward undetermined.
 - **Ten findings fixed after closure.** Closed as duplicate, infeasible, or not-a-vulnerability, then fixed in shipped code. No reward, no credit.. !?
 - **Total actually received across all of it: $250..**
