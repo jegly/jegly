@@ -8,7 +8,7 @@
 One of my own projects, Box, started as a fork of their AI Edge Gallery, and I've worked on it most days for the past year. Google has pulled features from my fork back into their project, so it has gone both ways, This is specifically about what happened when I reported real, working security bugs through their own process: they used the work, and they didn't pay for it.
 I also maintain Iris which is a hardened Chromium fork focused on Modern day security and privacy.
 
-For most of the last year this is what I've done. I reverse engineered the Samsung radio stack, the IMS and RTP media code, the Trusty trusted apps, the MediaTek M90 modem RIL, and the Android telephony framework on Google's current phones, and many more things. I filed eighty six reports through the Android and Google Devices Vulnerability Reward Program. 95% had a working proof of concept. 
+For most of the last year this is what I've done. I reverse engineered the Samsung radio stack (under embargo), the IMS and RTP media code, the Trusty trusted apps, the MediaTek M90 modem RIL, and the Android telephony framework on Google's current phones, and many more things. I filed eighty six reports through the Android and Google Devices Vulnerability Reward Program. 95% had a working proof of concept. 
 
 
 
