@@ -28,7 +28,7 @@ One line from that thread I still can't parse. They told me, in writing, that th
 ## Where this stands right now
 
 - **$250, Safety Center report (Moderate).** Approved in writing in January, reconfirmed in writing several times since. Unpaid ten months later. Ticket closed...
-- **Two High severity reports, still "Assigned."** Both formally rated High by Google. Rewards undetermined, CVEs awaiting to be assigned. One of the two is already fixed in Google's shipped code in the latest firmware images as of now.. ?!?!? 
+- **Two High severity reports, still "Assigned."** Both formally rated High by Google. Rewards undetermined, CVEs awaiting to be assigned. One of the two is already fixed in Google's **public November stable build** (CP4A.261105.040.D1, rolled out to all Pixels on 2026-11-10), and the ticket is STILL "Assigned" with the reward field blank.. ?!?!? 
 - **One Moderate report, still "Assigned."** Rated Moderate on 28 October. Reward undetermined.
 - **Ten findings fixed after closure.** Closed as duplicate, infeasible, or not-a-vulnerability, then fixed in shipped code. No reward, no credit.. !?
 - **Total actually received across all of it: $250..**
@@ -53,6 +53,34 @@ I didn't use Google's bulletin or supplemental patch list for this. A silent fix
 On ticket **467575499 / 470814942**, on **23 January 2026**, Google wrote that they had "confirmed this is a valid bug," were "increasing severity," "increasing reward," and would "issue a payment for the new amount once it has been processed." On **24 April**, with no new analysis, they reversed all three. The same bug now "does not qualify for a reward or severity increase," called a "Final Assessment."
 
 In June they wrote that they wanted to "stand by our word regarding the reward." On **10 July** they gave the numbers: "$250 for Safety Center, $250 for the mic bug, $500USD total," and said they were "honoring our initial promise," while still calling the Safety Center half a duplicate with no security impact. The mic half was paid. The Safety Center half went into a "discretionary payment exception" with, in their words, no "exact credit date." That was January. The most recent reply, in October, says the same thing: still approved, no date.
+
+<p align="center"><img src="evidence/ev-7f3a.png" width="860"><br><em>23 Jan 2026: "confirmed this is a valid bug," severity increased, reward increased, "we will issue a payment for the new amount once it has been processed."</em></p>
+
+<p align="center"><img src="evidence/ev-2c9d.png" width="860"><br><em>24 Apr 2026: all three reversed with no new analysis. The same report now "does not qualify for a reward or a severity increase." Labelled a "Final Assessment."</em></p>
+
+<p align="center"><img src="evidence/ev-b148.png" width="860"><br><em>9 Jul 2026: paying it anyway "even though our final technical assessment rated it as a duplicate of a report with no security impact."</em></p>
+
+<p align="center"><img src="evidence/ev-9e05.png" width="860"><br><em>10 Jul 2026: the numbers, in writing. $250 + $250, $500 total. The Safety Center half put into a "discretionary payment exception" with no "exact credit date." Sidebar: ASR Payment 250.</em></p>
+
+<p align="center"><img src="evidence/ev-4a7c.png" width="860"><br><em>31 Oct 2026: still no date, no Bugcrowd reference. "your $250 reward is fully approved." And: "We also respect your right to publish a public write-up about your findings and your experience."</em></p>
+
+## Rated High by Google, fixed in shipped code, reward field still blank
+
+Not everything here is a duplicate or a "not a vulnerability." On this one Google's own panel rated the report **High severity, High quality**, assigned it for remediation, and the fix has since shipped in a public stable Pixel build. It is still marked "Assigned," with the reward and CVE fields left blank, so the vulnerability itself is kept out of this write-up. What the screenshots below show is only the process: a report Google rated High, confirmed reward-eligible in writing, then parked on "Assigned" after the exact gate it set had already been met.
+
+<p align="center"><img src="evidence/ev-d620.png" width="860"><br><em>7 Oct 2026: rated High severity, High quality. Sidebar: ASR Severity High, while ASR Eligible, ASR Payment and CVE are all blank.</em></p>
+
+<p align="center"><img src="evidence/ev-1f88.png" width="860"><br><em>31 Oct 2026: "yes, your report is eligible for a reward." The amount is "still reviewing"; the ASR fields stay blank.</em></p>
+
+<p align="center"><img src="evidence/ev-5bca.png" width="860"><br><em>4 Nov 2026: the gate, in their words. The ticket stays "Assigned" and the CVE is assigned "once the stable update is available to the public" and they confirm "the change you found in the beta is indeed the fix."</em></p>
+
+<p align="center"><img src="evidence/ev-3d71.png" width="860"><br><em>13 Nov 2026: the stable update is now public, so the gate is met. The reply moves it: the fix is now "being scheduled for a future Pixel Update Bulletin," and the reward is "still reviewing." ASR fields still blank.</em></p>
+
+And it is not the only one. A second, independent report was rated **High severity, High quality** by the same panel. A month later it is still "Assigned," the reward still "with the panel," the ASR fields still blank. The report is kept unnamed here and no technical detail is shown; the screenshots are only the rating and the reward state.
+
+<p align="center"><img src="evidence/ev-a2e9.png" width="860"><br><em>A second, separate report, independently rated High severity, High quality. Sidebar: ASR Severity High, while ASR Eligible, ASR Payment and CVE are all blank.</em></p>
+
+<p align="center"><img src="evidence/ev-6c40.png" width="860"><br><em>Over a month later, on the same report: "you have been waiting a month for the reward decision." Still "with the panel," no date given, ASR fields still blank.</em></p>
 
 ## The duplicate-ID collision they admitted
 
