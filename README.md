@@ -26,7 +26,7 @@ One line from that thread I still can't parse. They told me, in writing, that th
 ## Where this stands right now
 
 - **$250, Safety Center report (Moderate).** Approved in writing in January, reconfirmed in writing several times since. Unpaid ten months later. Ticket closed...
-- **Two High severity reports, still "Assigned."** Both formally rated High by Google. Rewards undetermined, CVEs awaiting to be assigned. One of the two has already been fixed **twice** in shipped code: first in the QPR3 beta (DP11.261002.005) back in October, then in the **public November stable** (CP4A.261105.040.D1, rolled out to all Pixels on 2026-11-10), and the ticket is STILL "Assigned" with the reward field blank.. ?!?!? 
+- **Two High severity reports, still "Assigned."** Both formally rated High by Google. Rewards undetermined, CVEs awaiting to be assigned. One of the two has already been fixed **three times** in shipped code: first in the QPR3 beta (DP11.261002.005) in October, then in the **public November stable** (CP4A.261105.040.D1, rolled out to all Pixels on 2026-11-10), and again in the latest QPR3 beta (DP11.261030.003, released 12 November 2026), and the ticket is STILL "Assigned" with the reward field blank.. ?!?!? 
 - **One Moderate report, still "Assigned."** Rated Moderate on 28 October. Reward undetermined.
 - **Ten findings fixed after closure.** Closed as duplicate, infeasible, or not-a-vulnerability, then fixed in shipped code. No reward, no credit.. !?
 - **Total actually received across all of it: $250..**
@@ -64,7 +64,7 @@ In June they wrote that they wanted to "stand by our word regarding the reward."
 
 ## Rated High by Google, fixed in shipped code, reward field still blank
 
-Not everything here is a duplicate or a "not a vulnerability." On this one Google's own panel rated the report **High severity, High quality**, assigned it for remediation, and the fix has since shipped twice: first in the QPR3 beta (DP11.261002.005) in October, then in the public November stable build (CP4A.261105.040.D1). It is still marked "Assigned," with the reward and CVE fields left blank, so the vulnerability itself is kept out of this write-up. What the screenshots below show is only the process: a report Google rated High, confirmed reward-eligible in writing, then parked on "Assigned" after the exact gate it set had already been met.
+Not everything here is a duplicate or a "not a vulnerability." On this one Google's own panel rated the report **High severity, High quality**, assigned it for remediation, and the fix has since shipped three times: first in the QPR3 beta (DP11.261002.005) in October, then in the public November stable build (CP4A.261105.040.D1), and again in the latest QPR3 beta (DP11.261030.003). It is still marked "Assigned," with the reward and CVE fields left blank, so the vulnerability itself is kept out of this write-up. What the screenshots below show is only the process: a report Google rated High, confirmed reward-eligible in writing, then parked on "Assigned" after the exact gate it set had already been met.
 
 <p align="center"><img src="evidence/ev-d620.png" width="860"><br><em>7 Oct 2026: rated High severity, High quality. Sidebar: ASR Severity High, while ASR Eligible, ASR Payment and CVE are all blank.</em></p>
 
