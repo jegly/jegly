@@ -173,7 +173,6 @@ This is not a payment claim. None of these were fixed, It shows the stated closu
 | 541986810 | framework.jar `RecoverySystem.verifyPackage` | Duplicate | Unchanged. The certificate checked and the certificate used for verification can still differ. |
 | 547481980 | services.jar `FileService.enqueueOperation` | Duplicate | Unchanged (high confidence). No ownership or permission check before dispatch. |
 
-One MediaTek RIL finding, 555425202 (`onPcoInfoNotify`), changed in the QPR3 build. I'm re-verifying it before I call it either way, so it's left out of both tables rather than guessed at.
 
 ## Count
 
