@@ -2,13 +2,11 @@
   <img src="https://github.com/jegly/jegly/blob/main/jes.gif" alt="Chaotic Cubes" width="250">
 </p>
 
-# A year in Google's VRP: 85 reports, one $250USD payment, and the bugs they fixed after telling me they weren't real....
-
  FYI I'm not against Google..
 One of my own projects, Box, started as a fork of their AI Edge Gallery, and I've worked on it most days for the past year. Google has pulled features from my fork back into their project, so it has gone both ways, This is specifically about what happened when I reported real, working security bugs through their own process: they used the work, and they didn't pay for it.
 I also maintain Iris which is a hardened Chromium fork focused on Modern day security and privacy.
 
-For most of the last year this is what I've done. I reverse engineered the Samsung radio stack (under embargo), the IMS and RTP media code, the Trusty trusted apps, the MediaTek M90 modem RIL, and the Android telephony framework on Google's current phones, and many more things. I filed eighty six reports through the Android and Google Devices Vulnerability Reward Program. 95% had a working proof of concept. 
+For most of the last year this is what I've done. I reverse engineered the Samsung radio stack (under embargo), the IMS and RTP media code, the Trusty trusted apps, the MediaTek M90 modem RIL, and the Android telephony framework on Google's current phones, and many more things. I filed ninety five reports through the Android and Google Devices Vulnerability Reward Program. 95% had a working proof of concept. 
 
 
 
@@ -28,7 +26,7 @@ One line from that thread I still can't parse. They told me, in writing, that th
 ## Where this stands right now
 
 - **$250, Safety Center report (Moderate).** Approved in writing in January, reconfirmed in writing several times since. Unpaid ten months later. Ticket closed...
-- **Two High severity reports, still "Assigned."** Both formally rated High by Google. Rewards undetermined, CVEs awaiting to be assigned. One of the two is already fixed in Google's **public November stable build** (CP4A.261105.040.D1, rolled out to all Pixels on 2026-11-10), and the ticket is STILL "Assigned" with the reward field blank.. ?!?!? 
+- **Two High severity reports, still "Assigned."** Both formally rated High by Google. Rewards undetermined, CVEs awaiting to be assigned. One of the two has already been fixed **twice** in shipped code: first in the QPR3 beta (DP11.261002.005) back in October, then in the **public November stable** (CP4A.261105.040.D1, rolled out to all Pixels on 2026-11-10), and the ticket is STILL "Assigned" with the reward field blank.. ?!?!? 
 - **One Moderate report, still "Assigned."** Rated Moderate on 28 October. Reward undetermined.
 - **Ten findings fixed after closure.** Closed as duplicate, infeasible, or not-a-vulnerability, then fixed in shipped code. No reward, no credit.. !?
 - **Total actually received across all of it: $250..**
@@ -66,7 +64,7 @@ In June they wrote that they wanted to "stand by our word regarding the reward."
 
 ## Rated High by Google, fixed in shipped code, reward field still blank
 
-Not everything here is a duplicate or a "not a vulnerability." On this one Google's own panel rated the report **High severity, High quality**, assigned it for remediation, and the fix has since shipped in a public stable Pixel build. It is still marked "Assigned," with the reward and CVE fields left blank, so the vulnerability itself is kept out of this write-up. What the screenshots below show is only the process: a report Google rated High, confirmed reward-eligible in writing, then parked on "Assigned" after the exact gate it set had already been met.
+Not everything here is a duplicate or a "not a vulnerability." On this one Google's own panel rated the report **High severity, High quality**, assigned it for remediation, and the fix has since shipped twice: first in the QPR3 beta (DP11.261002.005) in October, then in the public November stable build (CP4A.261105.040.D1). It is still marked "Assigned," with the reward and CVE fields left blank, so the vulnerability itself is kept out of this write-up. What the screenshots below show is only the process: a report Google rated High, confirmed reward-eligible in writing, then parked on "Assigned" after the exact gate it set had already been met.
 
 <p align="center"><img src="evidence/ev-d620.png" width="860"><br><em>7 Oct 2026: rated High severity, High quality. Sidebar: ASR Severity High, while ASR Eligible, ASR Payment and CVE are all blank.</em></p>
 
@@ -92,7 +90,7 @@ They admitted it in writing, on both tickets: "Giving you this ID for your other
 
 A lot of my reports followed the same arc. Filed, Assigned, worked by an engineer, and then months later, with no new technical comment in between, the status quietly flips to Duplicate. The reason is always an internal canonical bug ID I cannot view, usually with a line that it was "previously reported by an internal Google engineer." I have no way to see that internal report, confirm it exists, or confirm it actually predates mine.
 
-And there are a lot of them. Of the 86 reports in my tracker, 33 were closed as Duplicate. A few of those are my own resubmissions and appeals collapsed back together, so call it roughly 26 distinct findings that Google agreed were real and then attributed to a report I am not allowed to see. A duplicate is not a rejection. It is Google confirming the bug exists and saying someone got there first. For 26 of mine, "someone" is an internal engineer who, by their account, found the identical bug the same month I did, against firmware that had only just shipped.
+And there are a lot of them. Of the 95 reports in my tracker, 34 were closed as Duplicate. A few of those are my own resubmissions and appeals collapsed back together, so call it roughly 26 distinct findings that Google agreed were real and then attributed to a report I am not allowed to see. A duplicate is not a rejection. It is Google confirming the bug exists and saying someone got there first. For 26 of mine, "someone" is an internal engineer who, by their account, found the identical bug the same month I did, against firmware that had only just shipped.
 
 The timing is what I keep coming back to. I always work on the current month's latest factory image, so every report I file is against firmware that was released that same month, often only days before. A bug I pulled out of an image that shipped last week, coming back weeks later as something Google has supposedly had open internally for months, is a claim I am in no position to check, and it happens over and over.
 
