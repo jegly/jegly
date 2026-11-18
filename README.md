@@ -10,7 +10,6 @@ I also maintain Iris which is a hardened Chromium fork focused on Modern day sec
 
 For most of the last year this is what I've done. I reverse engineered the Samsung radio stack (under embargo), the IMS and RTP media code, the Trusty trusted apps, the MediaTek M90 modem RIL, and the Android telephony framework on Google's current phones, and many many more things. I filed ninety five reports through the Android and Google Devices Vulnerability Reward Program. 95% had a working proof of concept. 
 
-
 Total paid, for all of it: **$250USD. One payment.**
 
 This isn't one unlucky ticket. The same thing keeps happening three different ways.
@@ -22,7 +21,6 @@ This isn't one unlucky ticket. The same thing keeps happening three different wa
 **They promised a reward in writing, in January, and still haven't paid it.** Google confirmed a valid bug, raised the severity, raised the reward, in writing. Three months later they reversed all three with no new evidence. Then they said they would "stand by our word" and pay it anyway as a $250 "discretionary payment exception." That was January. Ten months of "processing / soon / no date" later, it still isn't paid,but was submitted prior to December 2025.
 
 One line from that thread I still can't parse. They told me, in writing, that they are paying the Safety Center reward *"even though our final technical assessment rated it as a duplicate of a report with no security impact."* If it has no security impact there is no basis to pay it. If it is worth paying, "no security impact" is false. Both are in the ticket.
-
 
 ## Where this stands right now
 
@@ -101,6 +99,14 @@ In the one case where I pushed hard enough to get the canonical's build, it was 
 
 Earlier in this, Google closed a finding with the standard "not a security vulnerability, logged for potential remediation in a future version, considered closed." They later took it back in writing: "You are completely correct. This finding is indeed a legitimate security vulnerability. It was incorrectly closed as 'not a security vulnerability' due to an oversight during triage of this specific ticket." The same template closed several more of my bugs after that. It has a record, on my own tickets, of being wrong by their own admission not just once or twice either, highly suspicious...
 
+## Closed "Intended Behavior" by the rate-limit bot
+
+From here on, after Google closes one of my reports I disclose it here. This is a clean example of the closure-reason problem, in a newer variant: a report that was **assigned and under engineering review for two months** was re-routed back to "New" and auto-closed by the rate-limit bot. The bot stamps **Won't Fix (Intended Behavior)** with no technical assessment, and tells you up front it "will not be able to see any of your responses." The two defects below are both missing-authorization and verifiable straight from the shipping image.
+
+| Ticket | What it does | Closure |
+|---|---|---|
+| 560456349 | A zero-permission app controls the Pixel 11 carrier-satellite (NTN) stack. Two exported `SatelliteGateway` receivers with no permission let any app force satellite sessions and churn gateway auth-keys. `ITelephony` transaction 420 (`overrideCarrierRoamingNtnEligibilityChanged`) carries no permission check — while all ~30 sibling methods enforce — gated only by a fail-open mock-modem default that ships `true` (the only `true` of 11 such checks; AOSP defaults false), which lets the app pin or spoof the "carrier satellite available" signal until reboot. Missing-authorization, Moderate. | Assigned 12 Sep 2026; "currently reviewing the technical details" on 16 Sep; then on 14 Nov re-routed to "New" and auto-closed **Won't Fix (Intended Behavior)** by the rate-limit bot — no technical assessment, no reply path. |
+
 ## Fixed in shipped code, closed with no reward
 
 Every row is a closed report, diffed against Google's current factory image. "Fixed" means the code the report described changed: the report was right, the fix shipped, the ticket stayed closed, nothing was paid.
@@ -174,7 +180,6 @@ This is not a payment claim. None of these were fixed, It shows the stated closu
 | 541986810 | framework.jar `RecoverySystem.verifyPackage` | Duplicate | Unchanged. The certificate checked and the certificate used for verification can still differ. |
 | 547481980 | services.jar `FileService.enqueueOperation` | Duplicate | Unchanged (high confidence). No ownership or permission check before dispatch. |
 
-
 ## Count
 
 - Fixed in shipped code, no reward or credit: eight on stable, two on the QPR3 beta. Ten, each its own ticket...
@@ -186,5 +191,3 @@ This is not a payment claim. None of these were fixed, It shows the stated closu
 In June 2026 The Register covered Justin O'Leary and his "ConfigConfusion" flaw in Google Config Connector, where a user in one Kubernetes namespace could reach GCP organization-owner rights. Google replied "Nice catch!", rated it P1/S1 and accepted, then reversed to "working as intended," denied the bounty, and left it unpatched with the tracker still showing it accepted. Acknowledged, then denied, still unfixed...
 
 CSO Online covered the broader pattern in 2020 (J.M. Porup, *"Bug bounty platforms buy researcher silence, violate labor laws, critics say"*): critics, including legal scholars such as Amit Elazari and Katie Moussouris, argue these programs can be used to suppress disclosure, that researchers often have no legal safe harbor, and that the model raises labor-law questions. The "disposable contractor whose finished work gets rejected with no recourse" framing is mine, not theirs.
-
-
