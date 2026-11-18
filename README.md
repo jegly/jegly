@@ -95,6 +95,8 @@ The timing is what I keep coming back to. I always work on the current month's l
 
 In the one case where I pushed hard enough to get the canonical's build, it was at least plausible. 549662989 was deduped to a report filed against a Pixel 10 (blazer:16/CP1A.260505.005), and PixelModemService ships that same code on both generations, so I accepted it. But that is the exception. The collision above is what the process looks like the moment I can actually check it: the same internal ID handed out as the "original" for two completely unrelated bugs, admitted in writing as a mistake. If one "verified duplicate" was stamped without anyone matching it to the report it named, I have no reason to assume the two dozen others I cannot verify were handled any more carefully.
 
+And it is not always an internal engineer. When I re-filed the DCMO `DcmoReceiver` bug (585012607) because it is still present and unpatched in the current shipping build, it was closed Duplicate of 545652324 — described as a report by another external researcher, a ticket I also cannot see. The defect is confirmed live in CP4A.261105.040.D1, so whatever the canonical is, the fix has not reached shipping code, and the reconciliation I asked for on the ticket (re-associate it to a tracked fix, or assess it on its own merits) did not happen.
+
 ## The "not a vulnerability" template, used before and retracted again and again and then patched with the code i submitted.
 
 Earlier in this, Google closed a finding with the standard "not a security vulnerability, logged for potential remediation in a future version, considered closed." They later took it back in writing: "You are completely correct. This finding is indeed a legitimate security vulnerability. It was incorrectly closed as 'not a security vulnerability' due to an oversight during triage of this specific ticket." The same template closed several more of my bugs after that. It has a record, on my own tickets, of being wrong by their own admission not just once or twice either, highly suspicious...
@@ -168,7 +170,7 @@ This is not a payment claim. None of these were fixed, It shows the stated closu
 |---|---|---|---|
 | 561846309 | ConfigUpdater.apk `PhenotypeHelper.getCertificate()` | WAI | Unchanged. Returns one certificate for every config type while its sibling methods switch on type. |
 | 552305734 | CrossDeviceAccessServicePrimary.apk `PermissionBroadcastReceiver` | Infeasible | Unchanged. Exported, no permission. |
-| 558478942 | DCMO.apk `DcmoReceiver` | Duplicate | Unchanged. Exported, no permission. |
+| 558478942 (re-filed 585012607) | DCMO.apk `DcmoReceiver` | Duplicate | Unchanged. Exported, no permission, fail-open `isVerizon()` carrier gate (empty operator && empty IMSI returns true, so a bogus subscription id passes it). Re-filed 12 Nov 2026 after re-verifying it in CP4A.261105.040.D1; re-closed Duplicate of 545652324, a report I can't see. |
 | 557568085 | TelephonyProvider.apk `updateSynchronized()` | Duplicate | Unchanged. Caller-supplied selection concatenated with no parentheses before the ownership clause. |
 | 555984702 | grilservice.apk `RadioConfig.readFromParcel` | Can't Repro | Unchanged. Raw `readInt()` size used as an allocation, no upper bound. |
 | 552188030 | services.jar `Vpn.setVpnForcedLocked()` | Duplicate | Unchanged. UID 0 excluded from the VPN lockdown range. |
