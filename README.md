@@ -2,8 +2,7 @@
   <img src="https://github.com/jegly/jegly/blob/main/jes.gif" alt="Chaotic Cubes" width="250">
 </p>
 
-
-https://www.justafewbugs.com
+www.justafewbugs.xyz
 
 I've carried out independent security research for a number of vendors and OEMs, identifying vulnerabilities that have resulted in several CVEs. I've also worked directly with various vendors and manufacturers on security research and vulnerability disclosures.
 
@@ -34,6 +33,8 @@ One line from that thread I still can't parse. They told me, in writing, that th
 - **Total actually received across all of it: $250..**
 
 Everything in the tables below is a **closed** report, with Google's own words quoted from the tracker. The three still "Assigned" reports and anything under active coordinated disclosure are kept out of the technical detail on purpose.
+
+Every report on this page is a closed ticket. Google's own position, stated on these tickets, is that they do not grant or deny permission for disclosure and that researchers are free to publish at their discretion. Nothing still under assessment or active coordinated disclosure is included here.
 
 ## How I checked
 
@@ -129,6 +130,22 @@ The reachability is the part I was most concrete about. The RIL does have one PD
 I re-verified both defects unchanged in three shipped builds: the October stable (CD1A.261005.003), the November stable (CP4A.261105.040.D1, SPL 2026-11-05), and the DP11 QPR3 beta. No bounds check was added on any of these paths.
 
 This is static analysis from the shipped binary. I do not have a modem test rig, which the report states plainly, so no runtime exploit is attached. On 12 November the team asked for a live software PoC. Two days later, on 14 November, the report was closed Won't Fix (Infeasible) with the template "we have investigated this issue and determined that this is not a security vulnerability... logged for potential remediation in a future version," and the ASR Severity field was set to NSBC. That is the same template this page documents Google retracting elsewhere, applied here to an unchecked, attacker-controlled `memcpy` length in the radio daemon, reachable zero-click, still present in the shipping build.
+
+## Some of the other closed bugs, in plain terms
+
+A few more of the closed reports, kept short. Each is the bug, roughly how it works, and how it is reached.
+
+**An OTA update the device will install, signed by the wrong key (ticket 541986810, closed Duplicate).** `RecoverySystem.verifyPackage` is the check that decides whether an update package is really signed by Google. It looks at two certificates and never confirms they are the same one. The trust check looks at the certificate sitting first in the package. The signature is then verified against a different certificate, chosen by an issuer and serial number that are also read from the package. So an attacker puts Google's genuine, public signing certificate first to pass the trust check, puts their own certificate further in, points the signature at that one, and signs the package with their own key. The check passes for a package they signed. It is reached through the sideload or update path, where the signature gate that is supposed to stop an unofficial package does not.
+
+**An always-on VPN that leaks root's traffic (ticket 552188030, closed Duplicate, still present).** VPN lockdown is meant to block everything that is not inside the tunnel. It builds the blocked range of users starting at user ID 1, which leaves user ID 0, root, outside the locked range. Traffic from a root-owned system path is not forced through the VPN and leaves the device outside the tunnel, which defeats the lockdown.
+
+**A cross-device receiver any app can poke (ticket 552305734, closed Infeasible, still present).** `PermissionBroadcastReceiver` in the Cross-Device stack is exported with no permission set on it. Any installed app, holding no permissions, can broadcast to it and drive a cross-device permission action it should not be able to control. A plain confused deputy.
+
+**The share sheet fetching a picture it should not (ticket 538314136, closed Infeasible, still present).** The intent resolver renders a caller-supplied icon URI without checking the caller is allowed to read it. An app hands it a URI that points at content belonging to another user or profile, and a privileged process fetches it on the attacker's behalf and hands it back.
+
+**Any app cancelling another app's on-device AI model load (ticket 558472707, closed Infeasible, still present).** `cancelModelLoad` in the NPU manager service does not check who is calling, so any app can cancel a different app's model load and deny it the hardware AI path.
+
+**A radio service you can crash with one value (ticket 555984702, closed Can't Reproduce, still present).** The `grilservice` radio-config path reads an array size straight from an incoming parcel with no cap and allocates it. A crafted size forces a huge allocation and takes the service down, dropping telephony.
 
 ## Fixed in shipped code, closed with no reward
 
