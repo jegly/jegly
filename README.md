@@ -2,7 +2,7 @@
   <img src="https://github.com/jegly/jegly/blob/main/jes.gif" alt="Chaotic Cubes" width="250">
 </p>
 
-www.justafewbugs.xyz
+www.justafewbugs.com
 
 I've carried out independent security research for a number of vendors and OEMs, identifying vulnerabilities that have resulted in several CVEs. I've also worked directly with various vendors and manufacturers on security research and vulnerability disclosures.
 
@@ -137,15 +137,65 @@ A few more of the closed reports, kept short. Each is the bug, roughly how it wo
 
 **An OTA update the device will install, signed by the wrong key (ticket 541986810, closed Duplicate).** `RecoverySystem.verifyPackage` is the check that decides whether an update package is really signed by Google. It looks at two certificates and never confirms they are the same one. The trust check looks at the certificate sitting first in the package. The signature is then verified against a different certificate, chosen by an issuer and serial number that are also read from the package. So an attacker puts Google's genuine, public signing certificate first to pass the trust check, puts their own certificate further in, points the signature at that one, and signs the package with their own key. The check passes for a package they signed. It is reached through the sideload or update path, where the signature gate that is supposed to stop an unofficial package does not.
 
-**An always-on VPN that leaks root's traffic (ticket 552188030, closed Duplicate, still present).** VPN lockdown is meant to block everything that is not inside the tunnel. It builds the blocked range of users starting at user ID 1, which leaves user ID 0, root, outside the locked range. Traffic from a root-owned system path is not forced through the VPN and leaves the device outside the tunnel, which defeats the lockdown.
+**DNS still leaves the phone when you turn on "Block connections without VPN" (ticket 552188030, closed Duplicate).** VPN lockdown is meant to stop any traffic that is not inside the tunnel. DNS queries are left exempt from that block, for every app, not just the device's own traffic. So even with lockdown on, an app's DNS lookups leave the device outside the VPN, which leaks which sites are being resolved and gives a channel the lockdown is supposed to close.
 
-**A cross-device receiver any app can poke (ticket 552305734, closed Infeasible, still present).** `PermissionBroadcastReceiver` in the Cross-Device stack is exported with no permission set on it. Any installed app, holding no permissions, can broadcast to it and drive a cross-device permission action it should not be able to control. A plain confused deputy.
+**Any app can switch off your Lock-on-Disconnect (ticket 552305734, closed Infeasible, still present).** The Cross-Device stack exports a broadcast receiver, `PermissionBroadcastReceiver`, with no permission on it, and it acts on the broadcast without checking who sent it. Any installed app, holding no permissions, can send that broadcast and force an immediate un-enrollment of the user's Lock-on-Disconnect security feature, turning off a protection the user had switched on.
 
 **The share sheet fetching a picture it should not (ticket 538314136, closed Infeasible, still present).** The intent resolver renders a caller-supplied icon URI without checking the caller is allowed to read it. An app hands it a URI that points at content belonging to another user or profile, and a privileged process fetches it on the attacker's behalf and hands it back.
 
 **Any app cancelling another app's on-device AI model load (ticket 558472707, closed Infeasible, still present).** `cancelModelLoad` in the NPU manager service does not check who is calling, so any app can cancel a different app's model load and deny it the hardware AI path.
 
 **A radio service you can crash with one value (ticket 555984702, closed Can't Reproduce, still present).** The `grilservice` radio-config path reads an array size straight from an incoming parcel with no cap and allocates it. A crafted size forces a huge allocation and takes the service down, dropping telephony.
+
+**Any app can bind the Play Store's setup service (ticket 564059393, closed Working As Intended).** Play Store exports `IPlaySetupServiceV2`, and the permission meant to guard it declares no protection level, so Android treats it as a normal permission and auto-grants it to any app that asks. Any installed app can then bind the service. The same pattern, a guard permission with no protection level so it auto-grants, turned up across 31 exported components in the shipped image.
+
+**An unprotected "setup finished" broadcast that rewrites your system locale (ticket 563958561, closed Infeasible).** `SETUP_WIZARD_FINISHED` is not a protected broadcast, so any app can send it. Nine privileged, system-UID receivers act on it, and one of them persistently rewrites the device's system locale. A zero-permission app sends one broadcast and changes a system-wide setting it has no right to touch.
+
+**A preinstalled app slipping past the account-ownership check (ticket 559524832, closed Infeasible).** `AccountManagerService.isSystemUid()` actually tests whether the caller is preinstalled, not whether it is the system UID. Any preinstalled app therefore passes a guard meant only for the system, and can see and remove accounts it does not own.
+
+**Faking that you are standing next to your car (ticket 560453159, closed Can't Reproduce).** Two chained UWB bugs: one leaks the secure-ranging session key, the other hijacks the Digital Key radio path. Together a zero-permission app could spoof the physical proximity that passive car entry relies on, without being anywhere near the vehicle.
+
+**One Wi-Fi frame reading out of bounds in the kernel (ticket 568933934, closed Can't Reproduce).** An unsigned integer underflow in the Broadcom Wi-Fi driver's QoS-Map action-frame handler causes an out-of-bounds read in kernel heap memory. A single 25-byte 802.11 action frame from a nearby Wi-Fi peer triggers it, with no association or pairing.
+
+**A VoLTE call message that hangs the IMS stack (ticket 560878423, closed Can't Reproduce).** A SIP message with a negative Content-Length is parsed as a signed value, the offset goes negative, and the receive loop never ends. One zero-click message puts the VoLTE/IMS stack into a permanent hang.
+
+**Any app reading and tampering with your Now Playing history (ticket 562215877, closed Infeasible).** Private Compute Services exports `NowPlayingRelayService` as a binder with no caller check, unlike four sibling services in the same app. Any installed app can read and alter the record of music the phone has recognised around you.
+
+**Any app triggering a recognition pass and reading the result (ticket 561838690, closed Infeasible).** The Android System Intelligence `MusicRelayService` binder does no caller check across its 19 transactions, so any app can read your Now Playing history and silently start a new recognition pass, listening to what is around you.
+
+**An RCS suggestion that runs JavaScript in-app with one tap (ticket 572199671, closed Working As Intended).** Google Messages' blocklist for RCS suggested-action URLs misses the `javascript:` and `data:` schemes, so a crafted suggestion loads into a JavaScript-enabled bridged WebView, and one tap runs the attacker's JavaScript inside the app.
+
+**Any app reading the CBRS radio database and its coordinates (ticket 579289116, closed Duplicate).** The `CbsdContentProvider` in SCONE is exported with no guard, so any installed app can read the CBRS CBSD database, including the CBSD location coordinates, that it should have no access to.
+
+**A Wi-Fi attribute reading out of bounds in the kernel (ticket 547477982, closed Duplicate).** The Broadcom Wi-Fi driver does not validate a NAN SDEA attribute length before using it, so a crafted value causes an out-of-bounds read in kernel memory. It is reachable from a nearby Wi-Fi peer.
+
+**A system service handed the keys to start anything (ticket 558470054, closed Infeasible).** `dcservice`, an app-tier component, is given the SELinux permission to start any init service, the only domain on the whole device with that broad grant, and for a capability its own code never uses. It is exactly the kind of over-grant that turns a small foothold into a larger one.
+
+**The SDK sandbox taking attacker file paths (ticket 561840524, closed Can't Reproduce).** `computeSdkStorage` is the one method on the SDK Runtime sandbox service that is missing the check that the caller is the system server, so any zero-permission app can bind the service and call it with paths of its choosing.
+
+**A two-byte location message that exhausts the stack (ticket 568936058, closed Can't Reproduce).** The GNSS daemon's SUPL message framing recurses into itself with no base case when a message declares a zero length, so a two-byte message drives it into infinite recursion and crashes the daemon.
+
+**A WAP-push SMS that quietly kills texting (ticket 543183960, closed Infeasible).** A malformed WAP-push message lands in a loop with an empty catch block, so instead of failing cleanly the telephony process hangs and SMS silently stops working.
+
+**A SIP message body that overflows a stack buffer (ticket 540746953, closed Duplicate).** The IMS SIP encoder copies a message body into a fixed 65535-byte array on the stack with no cap, so an oversized body overflows it.
+
+**An eUICC update any app can kick off (ticket 532021672, closed Infeasible).** `StartOtaReceiver` is exported and unprotected, so any unprivileged app can trigger the eUICC OTA flow by sending the broadcast it listens for.
+
+**A system app that fetches URLs for you (ticket 537921665, closed Working As Intended).** ConfigUpdater's exported receivers take a URL from broadcast extras and fetch it, with no checks, so an app with no INTERNET permission can make a system app perform requests on its behalf, a server-side request forgery.
+
+**Tethered traffic walking straight past VPN lockdown (ticket 552196751, closed Infeasible).** "Block connections without VPN" does not cover tethered clients, so anything connected over USB, Ethernet or the Wi-Fi hotspot bypasses the VPN entirely. Google closed it as working by construction.
+
+**Any app repainting the real enterprise-enrollment screen (ticket 552200665, closed Infeasible).** A zero-permission app can drive the phone's genuine enterprise-enrollment screen and place its own logo on it, on demand, which is the groundwork for a convincing enrollment phish.
+
+**Impersonating another process by renaming yourself (ticket 559533853, closed Infeasible).** The process-monitor daemon identifies the process it watches only by reading `/proc/pid/cmdline`, with no UID check when the vendor config leaves the uid out. Any app can set its own process name to match the target and be treated as it.
+
+**An NFC firmware-update reply read past its buffer (ticket 537923579, closed Duplicate).** The NFC firmware-update handler indexes into the response from the NFC chip using a length it does not check. It sits on the trust boundary with the physically attached NFC controller.
+
+**Any app making a system installer install an APK (ticket 563677600, closed Duplicate).** WebAppService runs as a privileged app holding INSTALL_PACKAGES. By declaring a single intent-filter, any zero-permission app can make it install an APK, borrowing its install privilege.
+
+**A CDMA text message that overflows the radio daemon's stack (ticket 568929629, closed Duplicate).** The MediaTek RIL's CDMA CT-WAP SMS decoder (`BearerData::specialProcessForCtWapPush`) writes past a fixed buffer on a crafted message, with no interaction. This is the write half of the SMS chain described above, filed on its own.
+
+**A reported heap write in the Messages image decoder (ticket 537918512, closed Working As Intended).** A crafted animated-WebP image delivered by MMS or RCS, where the frame-disposal step in `libframesequence` was reported to clear a region using a width and height taken from the file without clamping them, overflowing the pixel buffer. Google closed it Working As Intended, and unlike most of the entries here I could not fully confirm the path in the shipped binary, so it is listed as reported and closed rather than verified.
 
 ## Fixed in shipped code, closed with no reward
 
